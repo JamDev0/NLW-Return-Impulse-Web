@@ -6,6 +6,8 @@ import BugIcon from '../../Assets/BugIcon.svg';
 import IdeaIcon from '../../Assets/IdeaIcon.svg';
 import ThoughtIcon from '../../Assets/ThoughtIcon.svg';
 import { FeedbackTypeStep } from "./Steps/FeedbackTypeStep";
+import { FeedbackRalateStep } from "./Steps/FeedbackRalateStep";
+import { FeedbackSuccessStep } from "./Steps/FeedbackSuccessStep";
 
 
 export const FeedbackTypes = {
@@ -36,22 +38,39 @@ export type FeedbackTYPE = keyof typeof FeedbackTypes;
 
 
 export function WidgetForm(){
-    const [FeedbackType, setFeedbackType] = useState<FeedbackTYPE | null>(null)
+    const [FeedbackType, setFeedbackType] = useState<FeedbackTYPE | null>(null);
+    const [FeedbackSend, setFeedbackSend] = useState(false);
+
+    function HandleFeedbackTypeRestart(){
+        setFeedbackSend(false)
+        setFeedbackType(null);
+    }
 
 
     return(
         <div className="bg-darkSurface-500 p-4 relative rounded-2xl mb-4 flex flex-col items-center gap-y-6 shadow-lg w-[calc(100vw-2rem)]  md:w-auto">
-            <header>
-                <span className="text-xl leading-6">Deixe seu feedback</span>
+            
 
-                <CloseBtn></CloseBtn>
-            </header>
-
-            {!FeedbackType ? (
-                <FeedbackTypeStep FeedbackClicked={setFeedbackType}/>
+            {FeedbackSend ? (
+                <FeedbackSuccessStep BtnClick={HandleFeedbackTypeRestart}/>
             ) : (
-                <h1>AA</h1>
-            )}
+                <>
+                    {!FeedbackType ? (
+                        <FeedbackTypeStep
+                        FeedbackClicked={setFeedbackType}
+                        />
+                    ) : (
+                        <FeedbackRalateStep
+                        FeedbackTypeInProps={FeedbackType}
+                        BackArrowFunction={HandleFeedbackTypeRestart}
+                        OnFeedbackSend={()=>{setFeedbackSend(true)}}
+                        />
+                    )}
+                </>
+            )
+            }
+
+            
 
             
 
